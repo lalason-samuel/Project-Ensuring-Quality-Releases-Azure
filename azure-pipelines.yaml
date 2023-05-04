@@ -72,7 +72,7 @@ stages:
           #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
           #     environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
           
-          - task: TerraformTaskV4@4
+          - task: TerraformCLI@0
             displayName: Terraform apply
             inputs:
               provider: 'azurerm'
