@@ -59,7 +59,10 @@ stages:
         command: 'validate'
         runAzLogin: true
 
-    
+    - script: |
+        echo $(System.DefaultWorkingDirectory)
+      displayName: 'Show workingDirectory'
+
     # Run Terraform Apply
     # ToDo: Change the workingDirectory path, as applicable to you
     - task: TerraformCLI@0
