@@ -1,5 +1,6 @@
 provider "azurerm" {
   features {}
+
 }
 /*
 resource "random_pet" "rg_name" {
