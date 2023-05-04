@@ -1,4 +1,8 @@
 provider "azurerm" {
+  tenant_id       = var.tenant_id
+  subscription_id = var.subscription_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
   features {}
 }
 /*
@@ -67,6 +71,7 @@ resource "null_resource" "test-remote-exec-1" {
       "echo Miarahaba anilay tafiditra",
       "sudo apt-get update",
       "sudo apt-get -y install zip",
+      "sudo apt-get -y install azure-cli",
       "curl -O https://vstsagentpackage.azureedge.net/agent/3.218.0/vsts-agent-linux-x64-3.218.0.tar.gz",
       "mkdir myagent && cd myagent",
       "tar zxvf ../vsts-agent-linux-x64-3.218.0.tar.gz"
