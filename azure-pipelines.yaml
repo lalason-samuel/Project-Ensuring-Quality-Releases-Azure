@@ -63,21 +63,19 @@ stages:
               command: "validate"
 
           # Run Terraform Apply
-          # ToDo: Change the workingDirectory path, as applicable to you
-          - task: TerraformCLI@0
+          # # ToDo: Change the workingDirectory path, as applicable to you
+          # - task: TerraformCLI@0
+          #   displayName: Terraform apply
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "apply"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+          #     environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
+          
+          - task: TerraformTaskV4@4
             displayName: Terraform apply
             inputs:
-              provider: "azurerm"
-              command: "apply"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
-              environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
-
-        # Destroy the resources in Azure
-        # # ToDo: Change the workingDirectory path, as applicable to you
-        # - task: TerraformCLI@3
-        #   displayName: Terraform destroy
-        #   inputs:
-        #     provider: 'azurerm'
-        #     command: 'destroy'
-        #     workingDirectory: '$(System.DefaultWorkingDirectory)/vm_terraform'
-        #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceNameAzureRM: 'myServiceConnection'
