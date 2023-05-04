@@ -12,7 +12,7 @@ variable "application_type" {}
 variable "password" {
   description = "entrer password please"
   sensitive   = true
-  default = S@miMvola1234
+  default     = "S@miMvola1234"
 }
 
 
