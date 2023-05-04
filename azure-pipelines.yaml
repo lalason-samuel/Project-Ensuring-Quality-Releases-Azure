@@ -39,6 +39,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               backendServiceArm: 'myServiceConnection'
               backendAzureRmResourceGroupName: 'Azuredevops'
               backendAzureRmStorageAccountName: 'samistkgv2ede'
@@ -50,6 +51,7 @@ stages:
               provider: 'azurerm'
               command: 'validate'
           - task: TerraformTaskV4@4
+            displayName: Terraform plan
             inputs:
               provider: 'azurerm'
               command: 'plan'
