@@ -12,7 +12,7 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
   disable_password_authentication = false
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "${var.application_type}-${var.resource_type}-DISK"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
     disk_size_gb         = 64
