@@ -33,7 +33,7 @@
 
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "my_terraform_nsg" {
-  name                = "myNetworkSecurityGroup"
+  name                = "${var.application_type}-${var.resource_type}"
   location            = var.location
   resource_group_name = var.resource_group
 

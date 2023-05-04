@@ -22,7 +22,7 @@
 
 # Crée un App Service Plan
 resource "azurerm_service_plan" "example" {
-  name                = "example-appserviceplan"
+  name                = "${var.application_type}-${var.resource_type}"
   location            = "eastus"
   resource_group_name = "Azuredevops"
   os_type             = "Linux"
@@ -38,7 +38,7 @@ resource "random_string" "resource_code" {
 
 # Crée un App Service
 resource "azurerm_linux_web_app" "example" {
-  name                = "appservice${random_string.resource_code.result}"
+  name                = "${var.application_type}-${var.resource_type}"
   location            = var.location
   resource_group_name = var.resource_group
   service_plan_id     = azurerm_service_plan.example.id

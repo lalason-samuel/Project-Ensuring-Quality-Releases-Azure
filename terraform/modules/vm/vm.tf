@@ -1,11 +1,12 @@
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
-  name                            = "myVM"
+  name = "${var.application_type}-${var.resource_type}"
+
   location                        = var.location
   resource_group_name             = var.resource_group
   network_interface_ids           = [var.network_interface_ids]
   size                            = "Standard_D2s_v3"
-  computer_name                   = "myvm"
+  computer_name                   = "myLinuxVM"
   admin_username                  = "sami"
   admin_password                  = var.password
   disable_password_authentication = false

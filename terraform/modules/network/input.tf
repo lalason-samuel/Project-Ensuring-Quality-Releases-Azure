@@ -1,5 +1,6 @@
 # Resource Group
 variable "resource_group" {}
+variable "resource_type" {}
 variable "location" {}
 
 variable "application_type" {}

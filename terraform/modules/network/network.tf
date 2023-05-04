@@ -14,7 +14,7 @@
 
 # Create virtual network
 resource "azurerm_virtual_network" "my_terraform_network" {
-  name                = "myVnet"
+  name                = "${var.application_type}-${var.resource_type}"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
   resource_group_name = var.resource_group
@@ -22,7 +22,7 @@ resource "azurerm_virtual_network" "my_terraform_network" {
 
 # Create subnet
 resource "azurerm_subnet" "my_terraform_subnet" {
-  name                 = "mySubnet"
+  name                 = "${var.application_type}-${var.resource_type}-sub"
   resource_group_name  = var.resource_group
   virtual_network_name = azurerm_virtual_network.my_terraform_network.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -30,7 +30,7 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 
 # Create network interface
 resource "azurerm_network_interface" "my_terraform_nic" {
-  name                = "myNIC"
+  name                = "${var.application_type}-${var.resource_type}-nic"
   location            = var.location
   resource_group_name = var.resource_group
 
