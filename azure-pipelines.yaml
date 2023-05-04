@@ -35,6 +35,10 @@ stages:
       inputs:
         command: version
 
+    - script: |
+        echo $(System.DefaultWorkingDirectory)
+      displayName: 'Show working directory'
+
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
     - task: TerraformCLI@0
@@ -42,7 +46,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/vm_terraform'
         backendServiceArm: '$(azureServiceConnectionId)'
         backendAzureRmResourceGroupName: 'Azuredevops'
         # backendAzureRmStorageAccountName: 'tfstate281845088'
@@ -59,10 +63,6 @@ stages:
         command: 'validate'
         runAzLogin: true
 
-    - script: |
-        echo $(System.DefaultWorkingDirectory)
-      displayName: 'Show workingDirectory'
-
     # Run Terraform Apply
     # ToDo: Change the workingDirectory path, as applicable to you
     - task: TerraformCLI@0
@@ -70,7 +70,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/vm_terraform'
         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
         runAzLogin: true
 
