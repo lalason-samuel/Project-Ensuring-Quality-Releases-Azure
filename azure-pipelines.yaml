@@ -61,7 +61,6 @@ stages:
             inputs:
               provider: "azurerm"
               command: "validate"
-              runAzLogin: true
 
           # Run Terraform Apply
           # ToDo: Change the workingDirectory path, as applicable to you
@@ -72,7 +71,6 @@ stages:
               command: "apply"
               workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
               environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
-              runAzLogin: true
 
         # Destroy the resources in Azure
         # # ToDo: Change the workingDirectory path, as applicable to you
