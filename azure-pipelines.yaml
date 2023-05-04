@@ -45,9 +45,11 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/vm_terraform'
         backendServiceArm: '$(azureServiceConnectionId)'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'tfstate281845088'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
+        # backendAzureRmStorageAccountName: 'tfstate281845088'
+        # backendAzureRmContainerName: 'tfstate'
+        # backendAzureRmKey: 'test.terraform.tfstate'
+        terraformVersion: '1.4.6'
+        runAzLogin: true
 
     # Run Terraform Validate    
     - task: TerraformCLI@0
@@ -55,6 +57,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
+        runAzLogin: true
 
     
     # Run Terraform Apply
@@ -66,6 +69,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/vm_terraform'
         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+        runAzLogin: true
 
     # Destroy the resources in Azure
     # # ToDo: Change the workingDirectory path, as applicable to you
