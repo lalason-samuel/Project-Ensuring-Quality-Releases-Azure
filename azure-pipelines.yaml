@@ -28,11 +28,11 @@ stages:
     - task: TerraformInstaller@0
       displayName: 'Terrafom installation'
       inputs:
-        terraformVersion: '1.2.9'
+        terraformVersion: '0.7.8'
     
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: TerraformCLI@3
+    - task: TerraformCLI@0
       displayName: 'Terrafom init'
       inputs:
         provider: 'azurerm'
@@ -45,7 +45,7 @@ stages:
         backendAzureRmKey: 'test.terraform.tfstate'
 
     # Run Terraform Validate    
-    - task: TerraformCLI@3
+    - task: TerraformCLI@0
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
@@ -54,7 +54,7 @@ stages:
     
     # Run Terraform Apply
     # ToDo: Change the workingDirectory path, as applicable to you
-    - task: TerraformCLI@3
+    - task: TerraformCLI@0
       displayName: Terraform apply
       inputs:
         provider: 'azurerm'
