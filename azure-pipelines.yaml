@@ -30,11 +30,6 @@ stages:
             inputs:
               terraformVersion: 'latest'
 
-          - task: TerraformCLI@0
-            displayName: "check terraform version"
-            inputs:
-              command: version
-
           - script: |
               echo $(System.DefaultWorkingDirectory)
             displayName: "Show working directory"
