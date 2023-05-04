@@ -35,6 +35,7 @@ stages:
             displayName: "Show working directory"
 
           - task: TerraformTaskV4@4
+            displayName: Terraform init
             inputs:
               provider: 'azurerm'
               command: 'init'
@@ -52,10 +53,12 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               environmentServiceNameAzureRM: 'myServiceConnection'
           - task: TerraformTaskV4@4
             displayName: Terraform apply
             inputs:
               provider: 'azurerm'
               command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               environmentServiceNameAzureRM: 'myServiceConnection'
