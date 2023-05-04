@@ -35,13 +35,14 @@ stages:
             displayName: "Show working directory"
 
           - task: TerraformTaskV4@4
-            displayName: Terraform inti
             inputs:
               provider: 'azurerm'
               command: 'init'
               backendServiceArm: 'myServiceConnection'
               backendAzureRmResourceGroupName: 'Azuredevops'
-              backendAzureRmStorageAccountName: 'samistkg8m7e7'
+              backendAzureRmStorageAccountName: 'samistkgv2ede'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: $(account_key)
           - task: TerraformTaskV4@4
             displayName: Terraform validate
             inputs:
