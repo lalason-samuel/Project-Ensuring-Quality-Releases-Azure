@@ -15,7 +15,6 @@ variable "password" {
   default     = "S@miMvola1234"
 }
 
-
 # # Network
 # variable virtual_network_name {}
 # variable address_prefix_test {}
