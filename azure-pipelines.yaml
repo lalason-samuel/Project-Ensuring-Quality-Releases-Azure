@@ -64,18 +64,10 @@ stages:
 
           # Run Terraform Apply
           # # ToDo: Change the workingDirectory path, as applicable to you
-          # - task: TerraformCLI@0
-          #   displayName: Terraform apply
-          #   inputs:
-          #     provider: "azurerm"
-          #     command: "apply"
-          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
-          #     environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
-          
           - task: TerraformCLI@0
             displayName: Terraform apply
             inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              provider: "azurerm"
+              command: "apply"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
               environmentServiceNameAzureRM: 'myServiceConnection'
