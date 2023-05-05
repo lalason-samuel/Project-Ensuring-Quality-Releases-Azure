@@ -42,7 +42,7 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               backendServiceArm: 'myServiceConnection'
               backendAzureRmResourceGroupName: 'Azuredevops'
-              backendAzureRmStorageAccountName: 'samistkgv2ede'
+              backendAzureRmStorageAccountName: 'samistrgname'
               backendAzureRmContainerName: 'tfstate'
               backendAzureRmKey: $(account_key)
           - task: TerraformTaskV4@4
