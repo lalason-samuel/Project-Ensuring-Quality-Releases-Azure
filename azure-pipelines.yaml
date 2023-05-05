@@ -71,5 +71,5 @@ stages:
               script: |
                 sudo apt update
                 sudo apt install nodejs npm -y
-                nodejs --version
-                npm install -g newman
+                sudo nodejs --version
+                sudo npm install -g newman
