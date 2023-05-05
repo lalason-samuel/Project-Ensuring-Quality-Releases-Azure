@@ -22,15 +22,6 @@ variables:
 stages:
   - stage: Build
     jobs:
-      - job: InstallDependence
-        steps:
-          # Install Terraform on the pipeline agent
-          - task: CmdLine@2
-            displayName: Install All Dependencies
-            inputs:
-              script: |
-                sudo apt-get update
-                sudo apt-get install -y openjdk-11-jdk
       - job: BuildInfrastructure
         steps:
           # Install Terraform on the pipeline agent
@@ -73,11 +64,7 @@ stages:
           #     command: 'apply'
           #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
           #     environmentServiceNameAzureRM: 'myServiceConnection'
-
-  - stage: IntegrationTests
-    displayName: Integration Tests
-    jobs:
-      - job: NewmanTests
+      - job: IntegrationTests
         steps:
           - task: CmdLine@2
             displayName: Install Newman
@@ -110,13 +97,46 @@ stages:
             inputs:
               testResultsFormat: "JUnit"
               testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
-
-  - stage: PerformanceTests
-    displayName: Performance Tests
-    jobs:
-      - job: JMeterTest
+      - job: PerformanceTests
         steps:
+          - task: CmdLine@2
+            displayName: Install Java
+            inputs:
+              script: |
+                sudo apt-get update
+                sudo apt-get install -y openjdk-11-jdk
           - task: JMeterInstaller@0
             displayName: Install JMeter
             inputs:
               jmeterVersion: "5.2.1"
+      - job: UITests
+        steps:
+          - task: CmdLine@2
+            displayName: Install Dependencies
+            inputs:
+              targetType: "inline"
+              script: |
+                #! /bin/bash
+
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                pip3 install selenium
+
+                # download chrome driver
+                FILE=chromedriver_linux64.zip
+                if [ -f "$FILE" ]; then
+                  echo "$FILE exists."
+                else
+                  wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+                fi
+                # install chrome driver
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver /usr/bin/chromedriver
+                sudo chown root:root /usr/bin/chromedriver
+                sudo chmod +x /usr/bin/chromedriver
+                chromium-browser -version
+                chromedriver --version
+                # agent log analytics
+                wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w dbf2bd83-6d47-436b-a499-a2b566def8fe -s MuSR8Ti5MMi0E+9+1NM4NxCxFqJcfLzuGD0EtGhjXo3Vhy/THcSdCf1WyQnkXafD+6DiFjiOAEfJiQh6EbZVeg== -d opinsights.azure.com
