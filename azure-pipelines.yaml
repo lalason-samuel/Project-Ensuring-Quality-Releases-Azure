@@ -28,42 +28,42 @@ stages:
           - task: TerraformInstaller@1
             displayName: "Terrafom installation"
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: "latest"
 
           - script: |
               echo $(System.DefaultWorkingDirectory)
             displayName: "Show working directory"
 
-          - task: TerraformTaskV4@4
-            displayName: Terraform init
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              backendServiceArm: 'myServiceConnection'
-              backendAzureRmResourceGroupName: 'Azuredevops'
-              backendAzureRmStorageAccountName: 'samistrgname'
-              backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: 'ensuring-quality-releases.tfstate'
-          - task: TerraformTaskV4@4
-            displayName: Terraform validate
-            inputs:
-              provider: 'azurerm'
-              command: 'validate'
-          - task: TerraformTaskV4@4
-            displayName: Terraform plan
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceNameAzureRM: 'myServiceConnection'
-          - task: TerraformTaskV4@4
-            displayName: Terraform apply
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceNameAzureRM: 'myServiceConnection'
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform init
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'init'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          #     backendServiceArm: 'myServiceConnection'
+          #     backendAzureRmResourceGroupName: 'Azuredevops'
+          #     backendAzureRmStorageAccountName: 'samistrgname'
+          #     backendAzureRmContainerName: 'tfstate'
+          #     backendAzureRmKey: 'ensuring-quality-releases.tfstate'
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform validate
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'validate'
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform plan
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'plan'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          #     environmentServiceNameAzureRM: 'myServiceConnection'
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform apply
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          #     environmentServiceNameAzureRM: 'myServiceConnection'
 
   - stage: IntegrationTests
     displayName: Integration Tests
@@ -79,14 +79,35 @@ stages:
                 sudo nodejs --version
                 sudo npm install -g newman
           - task: CmdLine@2
-            displayName: Run Data Validation Tests
-            continueOnError: true
+            displayName: Run Regression Tests
             inputs:
-              script: newman run StarterAPIs.json
-              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-  
-  # - stage: PerformanceTests
-  #   displayName: Performance Tests
-  #   jobs:
-  #     - job: JMeterTest
-  #       steps:
+              script: "newman run automatedtesting/postman/RegressionTestSuite.json -e automatedtesting/postman/RegressionTestSuite.Environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export Results/RegressionTests.xml"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+            continueOnError: true
+          - task: CmdLine@2
+            displayName: Run Data Validation Tests
+            inputs:
+              script: "newman run automatedtesting/postman/DataValidationTestSuite.json -e automatedtesting/postman/DataValidationTestSuite.Environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export Results/DataValidationTests.xml"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+            continueOnError: true
+          - task: CmdLine@2
+            displayName: Show folder after integration test
+            inputs:
+              script: "ls"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+          - task: PublishTestResults@2
+            displayName: Publish Test Reports
+            condition: always()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
+
+  - stage: PerformanceTests
+    displayName: Performance Tests
+    jobs:
+      - job: JMeterTest
+        steps:
+          - task: JMeterInstaller@0
+            displayName: Install JMeter
+            inputs:
+              jmeterVersion: "5.2.1"
