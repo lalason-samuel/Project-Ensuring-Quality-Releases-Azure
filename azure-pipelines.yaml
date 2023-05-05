@@ -20,51 +20,50 @@ variables:
   environmentName: "test"
 
 stages:
-  # - stage: Build
-  #   jobs:
-  #     - job: BuildInfrastructure
-  #       steps:
-  #         # Install Terraform on the pipeline agent
-  #         - task: TerraformInstaller@1
-  #           displayName: "Terrafom installation"
-  #           inputs:
-  #             terraformVersion: 'latest'
+  - stage: Build
+    jobs:
+      - job: BuildInfrastructure
+        steps:
+          # Install Terraform on the pipeline agent
+          - task: TerraformInstaller@1
+            displayName: "Terrafom installation"
+            inputs:
+              terraformVersion: 'latest'
 
-  #         - script: |
-  #             echo $(System.DefaultWorkingDirectory)
-  #           displayName: "Show working directory"
+          - script: |
+              echo $(System.DefaultWorkingDirectory)
+            displayName: "Show working directory"
 
-  #         - task: TerraformTaskV4@4
-  #           displayName: Terraform init
-  #           inputs:
-  #             provider: 'azurerm'
-  #             command: 'init'
-  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-  #             backendServiceArm: 'myServiceConnection'
-  #             backendAzureRmResourceGroupName: 'Azuredevops'
-  #             backendAzureRmStorageAccountName: 'samistrgname'
-  #             backendAzureRmContainerName: 'tfstate'
-  #             backendAzureRmKey: $(account_key)
-  #         - task: TerraformTaskV4@4
-  #           displayName: Terraform validate
-  #           inputs:
-  #             provider: 'azurerm'
-  #             command: 'validate'
-  #         - task: TerraformTaskV4@4
-  #           displayName: Terraform plan
-  #           inputs:
-  #             provider: 'azurerm'
-  #             command: 'plan'
-  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-  #             environmentServiceNameAzureRM: 'myServiceConnection'
-  #         - task: TerraformTaskV4@4
-  #           displayName: Terraform apply
-  #           inputs:
-  #             provider: 'azurerm'
-  #             command: 'apply'
-  #             commandOptions: '-auto-approve'
-  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-  #             environmentServiceNameAzureRM: 'myServiceConnection'
+          - task: TerraformTaskV4@4
+            displayName: Terraform init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              backendServiceArm: 'myServiceConnection'
+              backendAzureRmResourceGroupName: 'Azuredevops'
+              backendAzureRmStorageAccountName: 'samistrgname'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'ensuring-quality-releases.tfstate'
+          - task: TerraformTaskV4@4
+            displayName: Terraform validate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+          - task: TerraformTaskV4@4
+            displayName: Terraform plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceNameAzureRM: 'myServiceConnection'
+          - task: TerraformTaskV4@4
+            displayName: Terraform apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceNameAzureRM: 'myServiceConnection'
 
   - stage: IntegrationTests
     displayName: Integration Tests
