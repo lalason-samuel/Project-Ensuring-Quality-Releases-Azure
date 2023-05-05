@@ -20,51 +20,57 @@ variables:
   environmentName: "test"
 
 stages:
-  - stage: Build
+  # - stage: Build
+  #   jobs:
+  #     - job: BuildInfrastructure
+  #       steps:
+  #         # Install Terraform on the pipeline agent
+  #         - task: TerraformInstaller@1
+  #           displayName: "Terrafom installation"
+  #           inputs:
+  #             terraformVersion: 'latest'
+
+  #         - script: |
+  #             echo $(System.DefaultWorkingDirectory)
+  #           displayName: "Show working directory"
+
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform init
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'init'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+  #             backendServiceArm: 'myServiceConnection'
+  #             backendAzureRmResourceGroupName: 'Azuredevops'
+  #             backendAzureRmStorageAccountName: 'samistrgname'
+  #             backendAzureRmContainerName: 'tfstate'
+  #             backendAzureRmKey: $(account_key)
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform validate
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'validate'
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform plan
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'plan'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+  #             environmentServiceNameAzureRM: 'myServiceConnection'
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform apply
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'apply'
+  #             commandOptions: '-auto-approve'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+  #             environmentServiceNameAzureRM: 'myServiceConnection'
+
+  - stage: IntegrationTests
+    displayName: Integration Tests
     jobs:
-      - job: BuildInfrastructure
+      - job: NewmanTests
         steps:
-          # Install Terraform on the pipeline agent
-          - task: TerraformInstaller@1
-            displayName: "Terrafom installation"
-            inputs:
-              terraformVersion: 'latest'
-
-          - script: |
-              echo $(System.DefaultWorkingDirectory)
-            displayName: "Show working directory"
-
-          - task: TerraformTaskV4@4
-            displayName: Terraform init
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              backendServiceArm: 'myServiceConnection'
-              backendAzureRmResourceGroupName: 'Azuredevops'
-              backendAzureRmStorageAccountName: 'samistrgname'
-              backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: $(account_key)
-          - task: TerraformTaskV4@4
-            displayName: Terraform validate
-            inputs:
-              provider: 'azurerm'
-              command: 'validate'
-          - task: TerraformTaskV4@4
-            displayName: Terraform plan
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceNameAzureRM: 'myServiceConnection'
-          - task: TerraformTaskV4@4
-            displayName: Terraform apply
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              commandOptions: '-auto-approve'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceNameAzureRM: 'myServiceConnection'
           - task: CmdLine@2
             displayName: Install Newman
             inputs:
@@ -73,3 +79,15 @@ stages:
                 sudo apt install nodejs npm -y
                 sudo nodejs --version
                 sudo npm install -g newman
+          - task: CmdLine@2
+            displayName: Run Data Validation Tests
+            continueOnError: true
+            inputs:
+              script: newman run StarterAPIs.json
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  
+  # - stage: PerformanceTests
+  #   displayName: Performance Tests
+  #   jobs:
+  #     - job: JMeterTest
+  #       steps:
