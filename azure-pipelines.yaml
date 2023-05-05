@@ -64,8 +64,9 @@ stages:
           #     command: 'apply'
           #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
           #     environmentServiceNameAzureRM: 'myServiceConnection'
-      - job: IntegrationTests
-        steps:
+
+          # - job: IntegrationTests
+          #   steps:
           - task: CmdLine@2
             displayName: Install Newman
             inputs:
@@ -97,8 +98,9 @@ stages:
             inputs:
               testResultsFormat: "JUnit"
               testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
-      - job: PerformanceTests
-        steps:
+
+          # - job: PerformanceTests
+          #   steps:
           - task: CmdLine@2
             displayName: Install Java
             inputs:
@@ -109,10 +111,11 @@ stages:
             displayName: Install JMeter
             inputs:
               jmeterVersion: "5.2.1"
-      - job: UITests
-        steps:
+
+          # - job: UITests
+          #   steps:
           - task: CmdLine@2
-            displayName: Install Dependencies
+            displayName: Install Selenium
             inputs:
               targetType: "inline"
               script: |
@@ -140,3 +143,12 @@ stages:
                 chromedriver --version
                 # agent log analytics
                 wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w dbf2bd83-6d47-436b-a499-a2b566def8fe -s MuSR8Ti5MMi0E+9+1NM4NxCxFqJcfLzuGD0EtGhjXo3Vhy/THcSdCf1WyQnkXafD+6DiFjiOAEfJiQh6EbZVeg== -d opinsights.azure.com
+
+          - task: CmdLine@2
+            displayName: UI Tests
+            inputs:
+              targetType: "inline"
+              script: |
+                sudo mkdir /var/logs
+                python3 login.py > ui-logs.log
+                sudo mv ui-logs.log /var/logs
