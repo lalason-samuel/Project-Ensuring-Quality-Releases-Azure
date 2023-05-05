@@ -64,3 +64,11 @@ stages:
               command: 'apply'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               environmentServiceNameAzureRM: 'myServiceConnection'
+          - task: CmdLine@2
+            displayName: Install Newman
+            inputs:
+              script: |
+                sudo apt update
+                sudo apt install nodejs npm -y
+                nodejs --version
+                npm install -g newman
