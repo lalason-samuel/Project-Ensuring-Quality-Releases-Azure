@@ -22,6 +22,15 @@ variables:
 stages:
   - stage: Build
     jobs:
+      - job: InstallDependence
+        steps:
+          # Install Terraform on the pipeline agent
+          - task: CmdLine@2
+            displayName: Install All Dependencies
+            inputs:
+              script: |
+                sudo apt-get update
+                sudo apt-get install -y openjdk-11-jdk
       - job: BuildInfrastructure
         steps:
           # Install Terraform on the pipeline agent
