@@ -184,9 +184,16 @@ stages:
                     artifact: "drop"
                     path: "$(Pipeline.Workspace)"
 
-                - task: AzureWebApp@1
+                # - task: AzureWebApp@1
+                #   inputs:
+                #     azureSubscription: $(azureServiceConnectionId)
+                #     appType: webApp
+                #     appName: $(webAppName)
+                #     package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
+                - task: AzureRmWebAppDeployment@4
                   inputs:
-                    azureSubscription: $(azureServiceConnectionId)
-                    appType: webApp
-                    appName: $(webAppName)
-                    package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
+                    ConnectionType: 'AzureRM'
+                    azureSubscription: 'myServiceConnection'
+                    appType: 'webAppLinux'
+                    WebAppName: 'samiazure-APP'
+                    packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip'
