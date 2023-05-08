@@ -183,17 +183,18 @@ stages:
                     source: "current"
                     artifact: "drop"
                     path: "$(Pipeline.Workspace)"
-
-                # - task: AzureWebApp@1
+                # - task: AzureRmWebAppDeployment@4
                 #   inputs:
-                #     azureSubscription: $(azureServiceConnectionId)
-                #     appType: webApp
-                #     appName: $(webAppName)
-                #     package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
-                - task: AzureRmWebAppDeployment@4
+                #     ConnectionType: 'AzureRM'
+                #     azureSubscription: 'myServiceConnection'
+                #     appType: 'webAppLinux'
+                #     WebAppName: 'samiazure-APP'
+                #     packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip'
+                #     deploymentMethod: 'auto'
+                - task: AzureWebApp@1
                   inputs:
-                    ConnectionType: 'AzureRM'
                     azureSubscription: 'myServiceConnection'
                     appType: 'webAppLinux'
-                    WebAppName: 'samiazure-APP'
-                    packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip'
+                    appName: 'samiazure-APP'
+                    package: '$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip'
+                    runtimeStack: 'DOTNETCORE|6.0'
