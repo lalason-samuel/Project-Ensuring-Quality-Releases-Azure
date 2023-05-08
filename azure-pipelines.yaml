@@ -66,47 +66,6 @@ stages:
           #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
           #     environmentServiceNameAzureRM: 'myServiceConnection'
 
-          # - job: UITests
-          #   steps:
-          # - task: CmdLine@2
-          #   displayName: Install Selenium
-          #   inputs:
-          #     targetType: "inline"
-          #     script: |
-          #       #! /bin/bash
-
-          #       sudo apt-get upgrade -y
-          #       sudo apt-get install python3-pip -y
-          #       sudo apt-get install unzip -y
-          #       sudo apt-get install -y chromium-browser
-          #       pip3 install selenium
-
-          #       # download chrome driver
-          #       FILE=chromedriver_linux64.zip
-          #       if [ -f "$FILE" ]; then
-          #         echo "$FILE exists."
-          #       else
-          #         wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
-          #       fi
-          #       # install chrome driver
-          #       unzip chromedriver_linux64.zip
-          #       sudo mv chromedriver /usr/bin/chromedriver
-          #       sudo chown root:root /usr/bin/chromedriver
-          #       sudo chmod +x /usr/bin/chromedriver
-          #       chromium-browser -version
-          #       chromedriver --version
-          #       # agent log analytics
-          #       wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w dbf2bd83-6d47-436b-a499-a2b566def8fe -s MuSR8Ti5MMi0E+9+1NM4NxCxFqJcfLzuGD0EtGhjXo3Vhy/THcSdCf1WyQnkXafD+6DiFjiOAEfJiQh6EbZVeg== -d opinsights.azure.com
-
-          - task: CmdLine@2
-            displayName: UI Tests
-            inputs:
-              targetType: "inline"
-              script: |
-                sudo mkdir /var/logs
-                python3 $(System.DefaultWorkingDirectory)/login.py > ui-logs.log
-                sudo mv ui-logs.log /var/logs
-
           - task: ArchiveFiles@2
             displayName: "Archive FakeRestAPI"
             inputs:
@@ -211,3 +170,46 @@ stages:
             PathtoPublish: 'automatedtesting/jmeter'
             ArtifactName: 'jmeter'
             publishLocation: 'Container'
+  
+  - stage: Ui Testing
+    displayName: UI Testing
+    jobs:
+      - job: UITests
+        steps:
+        - task: CmdLine@2
+          displayName: Install Selenium
+          inputs:
+            targetType: "inline"
+            script: |
+              #! /bin/bash
+
+              sudo apt-get upgrade -y
+              sudo apt-get install python3-pip -y
+              sudo apt-get install unzip -y
+              sudo apt-get install -y chromium-browser
+              pip3 install selenium
+
+              # download chrome driver
+              FILE=chromedriver_linux64.zip
+              if [ -f "$FILE" ]; then
+                echo "$FILE exists."
+              else
+                wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+              fi
+              # install chrome driver
+              unzip chromedriver_linux64.zip
+              sudo mv chromedriver /usr/bin/chromedriver
+              sudo chown root:root /usr/bin/chromedriver
+              sudo chmod +x /usr/bin/chromedriver
+              chromium-browser -version
+              chromedriver --version
+              # agent log analytics
+              wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w dbf2bd83-6d47-436b-a499-a2b566def8fe -s MuSR8Ti5MMi0E+9+1NM4NxCxFqJcfLzuGD0EtGhjXo3Vhy/THcSdCf1WyQnkXafD+6DiFjiOAEfJiQh6EbZVeg== -d opinsights.azure.com
+        - task: CmdLine@2
+          displayName: UI Tests
+          inputs:
+            targetType: "inline"
+            script: |
+              sudo mkdir /var/logs
+              python3 $(System.DefaultWorkingDirectory)/login.py > ui-logs.log
+              sudo mv ui-logs.log /var/logs
