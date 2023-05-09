@@ -30,41 +30,41 @@ stages:
               echo $(System.DefaultWorkingDirectory)
             displayName: "Show working directory"
 
-          # Install Terraform on the pipeline agent
-          - task: TerraformInstaller@1
-            displayName: "Terrafom installation"
-            inputs:
-              terraformVersion: "latest"
-          - task: TerraformTaskV4@4
-            displayName: Terraform init
-            inputs:
-              provider: "azurerm"
-              command: "init"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
-              backendServiceArm: "myServiceConnection"
-              backendAzureRmResourceGroupName: "Azuredevops"
-              backendAzureRmStorageAccountName: "samistrgname"
-              backendAzureRmContainerName: "tfstate"
-              backendAzureRmKey: "ensuring-quality-releases.tfstate"
-          - task: TerraformTaskV4@4
-            displayName: Terraform validate
-            inputs:
-              provider: "azurerm"
-              command: "validate"
-          - task: TerraformTaskV4@4
-            displayName: Terraform plan
-            inputs:
-              provider: "azurerm"
-              command: "plan"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
-              environmentServiceNameAzureRM: "myServiceConnection"
-          - task: TerraformTaskV4@4
-            displayName: Terraform apply
-            inputs:
-              provider: "azurerm"
-              command: "apply"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
-              environmentServiceNameAzureRM: "myServiceConnection"
+          # # Install Terraform on the pipeline agent
+          # - task: TerraformInstaller@1
+          #   displayName: "Terrafom installation"
+          #   inputs:
+          #     terraformVersion: "latest"
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform init
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "init"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+          #     backendServiceArm: "myServiceConnection"
+          #     backendAzureRmResourceGroupName: "Azuredevops"
+          #     backendAzureRmStorageAccountName: "samistrgname"
+          #     backendAzureRmContainerName: "tfstate"
+          #     backendAzureRmKey: "ensuring-quality-releases.tfstate"
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform validate
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "validate"
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform plan
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "plan"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+          #     environmentServiceNameAzureRM: "myServiceConnection"
+          # - task: TerraformTaskV4@4
+          #   displayName: Terraform apply
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "apply"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+          #     environmentServiceNameAzureRM: "myServiceConnection"
 
           - task: ArchiveFiles@2
             displayName: "Archive FakeRestAPI"
@@ -112,7 +112,6 @@ stages:
                     runtimeStack: "DOTNETCORE|6.0"
                     linuxFxVersion: "DOTNET|6.0" # Spécifier la version correcte pour LinuxFxVersion
 
-
   # - stage: IntegrationTests
   #   displayName: Integration Tests
   #   jobs:
@@ -150,36 +149,36 @@ stages:
   #             testResultsFormat: "JUnit"
   #             testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
 
-  # - stage: JMeterTests
-  #   displayName: JMeter Tests
-  #   jobs:
-  #     - job: PerformanceTests
-  #       steps:
-  #         - task: CmdLine@2
-  #           displayName: Install Java
-  #           inputs:
-  #             script: |
-  #               sudo apt-get update
-  #               sudo apt-get install -y openjdk-11-jdk
-  #         - task: JMeterInstaller@0
-  #           displayName: Install JMeter
-  #           inputs:
-  #             jmeterVersion: "5.2.1"
-  #         - task: Bash@3
-  #           displayName: EnduranceTest
-  #           inputs:
-  #             targetType: "inline"
-  #             script: "jmeter -n -t automatedtesting/jmeter/EnduranceTestSuite.jmx -Jresdir=automatedtesting/jmeter/endurancepages.csv -l automatedtesting/jmeter/report/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport"
-  #         - task: Bash@3
-  #           displayName: StressTest
-  #           inputs:
-  #             targetType: "inline"
-  #             script: "jmeter -n -t automatedtesting/jmeter/StressTestSuite.jmx -Jresdir=automatedtesting/jmeter/stresspages.csv -l automatedtesting/jmeter/report/stressresults.jtl -e -o automatedtesting/jmeter/stressreport"
-  #         - task: PublishBuildArtifacts@1
-  #           inputs:
-  #             PathtoPublish: "automatedtesting/jmeter"
-  #             ArtifactName: "jmeter"
-  #             publishLocation: "Container"
+  - stage: JMeterTests
+    displayName: JMeter Tests
+    jobs:
+      - job: PerformanceTests
+        steps:
+          - task: CmdLine@2
+            displayName: Install Java
+            inputs:
+              script: |
+                sudo apt-get update
+                sudo apt-get install -y openjdk-11-jdk
+          - task: JMeterInstaller@0
+            displayName: Install JMeter
+            inputs:
+              jmeterVersion: "5.2.1"
+          - task: Bash@3
+            displayName: EnduranceTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/EnduranceTestSuite.jmx -Jresdir=automatedtesting/jmeter/endurancepages.csv -l automatedtesting/jmeter/report/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport"
+          - task: Bash@3
+            displayName: StressTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/StressTestSuite.jmx -Jresdir=automatedtesting/jmeter/stresspages.csv -l automatedtesting/jmeter/report/stressresults.jtl -e -o automatedtesting/jmeter/stressreport"
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: "automatedtesting/jmeter"
+              ArtifactName: "jmeter"
+              publishLocation: "Container"
 
   # - stage: UITesting
   #   displayName: UI Testing
