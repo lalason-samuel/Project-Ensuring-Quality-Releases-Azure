@@ -18,7 +18,9 @@ resource "azurerm_app_service" "test" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = 0
   }
-
+  site_config {
+    dotnet_framework_version = "v6.0"
+  }
   lifecycle {
     ignore_changes = [
       app_settings["WEBSITE_RUN_FROM_PACKAGE"],
