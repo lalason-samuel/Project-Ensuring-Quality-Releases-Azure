@@ -66,18 +66,18 @@ stages:
           #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
           #     environmentServiceNameAzureRM: "myServiceConnection"
 
-          # - task: ArchiveFiles@2
-          #   displayName: "Archive FakeRestAPI"
-          #   inputs:
-          #     rootFolderOrFile: "$(System.DefaultWorkingDirectory)/fakerestapi"
-          #     includeRootFolder: false
-          #     archiveType: "zip"
-          #     archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
-          #     replaceExistingArchive: true
+          - task: ArchiveFiles@2
+            displayName: "Archive FakeRestAPI"
+            inputs:
+              rootFolderOrFile: "$(System.DefaultWorkingDirectory)/fakerestapi"
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
+              replaceExistingArchive: true
 
-          # - upload: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
-          #   displayName: "Upload zip"
-          #   artifact: drop
+          - upload: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
+            displayName: "Upload zip"
+            artifact: drop
 
   - stage: Deploy
     displayName: Deploy stage
