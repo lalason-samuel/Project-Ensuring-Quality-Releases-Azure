@@ -1,5 +1,5 @@
 resource "azurerm_app_service_plan" "test" {
-  name                = "fakerestapi"
+  name                = "fakerestapi-PLAN"
   location            = var.location
   resource_group_name = var.resource_group
 
