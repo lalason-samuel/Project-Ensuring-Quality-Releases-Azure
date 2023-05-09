@@ -95,14 +95,24 @@ stages:
                     source: "current"
                     artifact: "drop"
                     path: "$(Pipeline.Workspace)"
-                - task: AzureRmWebAppDeployment@4
+                # - task: AzureRmWebAppDeployment@4
+                #   inputs:
+                #     ConnectionType: "AzureRM"
+                #     azureSubscription: "myServiceConnection"
+                #     appType: "webAppLinux"
+                #     WebAppName: "samiazure-APP"
+                #     runtimeStack: "DOTNETCORE|6.0"
+                #     packageForLinux: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
+                - task: AzureWebApp@1
+                  displayName: "Deploy to Azure Web App"
                   inputs:
-                    ConnectionType: "AzureRM"
                     azureSubscription: "myServiceConnection"
-                    appType: "webAppLinux"
-                    WebAppName: "samiazure-APP"
+                    appName: "samiazure-APP"
+                    package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
                     runtimeStack: "DOTNETCORE|6.0"
-                    packageForLinux: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
+                    startUpCommand: ""
+                    linuxFxVersion: "DOTNET|6.0" # Spécifier la version correcte pour LinuxFxVersion
+
 
   # - stage: IntegrationTests
   #   displayName: Integration Tests
