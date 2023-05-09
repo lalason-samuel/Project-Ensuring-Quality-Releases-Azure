@@ -101,6 +101,7 @@ stages:
                     azureSubscription: "myServiceConnection"
                     appType: "webAppLinux"
                     WebAppName: "samiazure-APP"
+                    runtimeStack: "DOTNETCORE|6.0"
                     packageForLinux: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
 
   # - stage: IntegrationTests
